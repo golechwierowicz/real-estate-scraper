@@ -6,3 +6,4 @@ class GumtreeItem(scrapy.Item):
     pictures = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
+    meta_info = scrapy.Field()
