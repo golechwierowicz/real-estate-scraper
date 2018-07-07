@@ -43,9 +43,14 @@ class OlxExtractor(Extractor):
     def _extract_meta(self, response):
         keys = response.xpath(
             "//*[@id=\"offerdescription\"]/div[3]/table/tr[*]/td[*]/table/tr/th/text()").extract()
-        values = [x.strip() for x in response.xpath('//*[@id="offerdescription"]/div[3]/table/tr[*]/td['
-                                                    '*]/table/tr/td/strong/text()').extract()]
-        return [x for x in zip(keys, values)]
+        values = [x.strip() for x in response.xpath("/html/body[@class='detailpage t-new_sidebar']/div[@id='innerLayout']/section["
+                                "@id='body-container']/div[@class='wrapper']/div[@id='offer_active']/div[@class='clr "
+                                "offerbody']/div[@class='offercontent fleft rel ']/div[@class='offercontentinner "
+                                "offer__innerbox']/div[@id='offerdescription']/div[@class='clr descriptioncontent "
+                                "marginbott20']/table[@class='details fixed marginbott20 margintop5 full']/tr[*]/td["
+                                "@class='col'][*]/table[@class='item']/tr/td[@class='value']/strong/a/text("
+                                ")").extract()]
+        return [(self._safe_strip(x), self._safe_strip(y).strip()) for x, y in zip(keys, values)]
 
 
 class OtodomExtractor(Extractor):
