@@ -38,7 +38,11 @@ class GumtreeExtractor(Extractor):
         return self._extract_within_content(response, 'div.description span.pre::text')
 
     def _extract_title(self, response):
-        return response.xpath('/html/body/div[2]/div[4]/div[1]/div[3]/section/div/div[5]/div[7]/ul/li[*]/div/div[2]/div[1]/a/text()').extract_first()
+        return  response.xpath("/html[@class='VIP']/body/div[@class='viewport']/div[@class='containment']/div["
+                               "@class='page extra']/div[@class='content']/section/div[@class='wrap']/div[1]/div["
+                               "@class='vip-header-and-details']/div[@class='vip-content-header']/div["
+                               "@class='vip-title clearfix']/h1[@class='item-title']/span[@class='myAdTitle']/text("
+                               ")").extract_first()
 
     def _extract_meta(self, response):
         return [[(self._safe_strip(a.css('span.name::text').extract_first()),
@@ -47,7 +51,8 @@ class GumtreeExtractor(Extractor):
                 for attr in response.css('div.vip-header-and-details ul.selMenu')]
 
     def _extract_price(self, response):
-        return self._extract_within_content(response, 'div.price span.value span.amount::text')
+        price_str = self._extract_within_content(response, 'div.price span.value span.amount::text')  # it is in a weird form "3 200 zł"
+        return int(''.join(re.findall('[0-9]+', price_str)))
 
     def _extract_id(self, response):
         result = response.css('div.breadcrumbs span.title::text').extract_first()
