@@ -10,8 +10,8 @@ class OlxSpider(scrapy.Spider):
                   for i in range(1, 10)]  # parse first 10 pages
 
     def parse(self, response):
-        for href in response\
-                .xpath('//*[@id="offers_table"]/tbody/tr[*]/td/table/tbody/tr[1]/td[2]/div/h3/a/@href')\
+        for href in response \
+                .xpath('//*[@id="offers_table"]/tbody/tr[*]/td/table/tbody/tr[1]/td[2]/div/h3/a/@href') \
                 .extract():
             yield response.follow(href, callback=self.parse_post, meta={'link': href})
 
@@ -43,13 +43,14 @@ class OlxExtractor(Extractor):
     def _extract_meta(self, response):
         keys = response.xpath(
             "//*[@id=\"offerdescription\"]/div[3]/table/tr[*]/td[*]/table/tr/th/text()").extract()
-        values = [x.strip() for x in response.xpath("/html/body[@class='detailpage t-new_sidebar']/div[@id='innerLayout']/section["
-                                "@id='body-container']/div[@class='wrapper']/div[@id='offer_active']/div[@class='clr "
-                                "offerbody']/div[@class='offercontent fleft rel ']/div[@class='offercontentinner "
-                                "offer__innerbox']/div[@id='offerdescription']/div[@class='clr descriptioncontent "
-                                "marginbott20']/table[@class='details fixed marginbott20 margintop5 full']/tr[*]/td["
-                                "@class='col'][*]/table[@class='item']/tr/td[@class='value']/strong/a/text("
-                                ")").extract()]
+        values = [x.strip() for x in
+                  response.xpath("/html/body[@class='detailpage t-new_sidebar']/div[@id='innerLayout']/section["
+                                 "@id='body-container']/div[@class='wrapper']/div[@id='offer_active']/div[@class='clr "
+                                 "offerbody']/div[@class='offercontent fleft rel ']/div[@class='offercontentinner "
+                                 "offer__innerbox']/div[@id='offerdescription']/div[@class='clr descriptioncontent "
+                                 "marginbott20']/table[@class='details fixed marginbott20 margintop5 full']/tr[*]/td["
+                                 "@class='col'][*]/table[@class='item']/tr/td[@class='value']/strong/a/text("
+                                 ")").extract()]
         return [(self._safe_strip(x), self._safe_strip(y).strip()) for x, y in zip(keys, values)]
 
 
@@ -69,7 +70,7 @@ class OtodomExtractor(Extractor):
         return [(self._safe_strip(x[0]), self._safe_strip(x[1])) for x in zip(keys, values)]
 
     def _extract_price(self, response):
-        result = response.xpath("/html/body/div[1]/section[5]/div/div/div/ul/li[1]/ul[1]/li[1]/span/strong/text()")\
+        result = response.xpath("/html/body/div[1]/section[5]/div/div/div/ul/li[1]/ul[1]/li[1]/span/strong/text()") \
             .extract_first()
         return self._safe_strip(result)
 
